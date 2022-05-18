@@ -65,6 +65,7 @@ void ObjetSimule::Interaction(Vector MousePos)
     if (_Interaction == "yes")
     {
         
+        P[0] = P[0] + MousePos;
         
     }//if
     

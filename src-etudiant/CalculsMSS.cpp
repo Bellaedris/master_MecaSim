@@ -21,10 +21,10 @@
  */
 
 /** \file CalculsMSS.cpp
-Programme calculant pour chaque particule i d un MSS son etat au pas de temps suivant 
+Programme calculant pour chaque particule i d un MSS son etat au pas de temps suivant
  (methode d 'Euler semi-implicite) : principales fonctions de calculs.
 \brief Fonctions de calculs de la methode semi-implicite sur un systeme masses-ressorts.
-*/ 
+*/
 
 #include <stdio.h>
 #include <math.h>
@@ -38,55 +38,57 @@ Programme calculant pour chaque particule i d un MSS son etat au pas de temps su
 
 using namespace std;
 
-
-
-
-
 /**
-* Calcul des forces appliquees sur les particules du systeme masses-ressorts.
+ * Calcul des forces appliquees sur les particules du systeme masses-ressorts.
  */
 void ObjetSimuleMSS::CalculForceSpring()
 {
-	for (int i = 0; i < _SystemeMasseRessort->GetNbParticule(); i++)
+	std::vector<Ressort *> ressorts = _SystemeMasseRessort->GetRessortList();
+
+	for (int i = 0; i < _SystemeMasseRessort->GetNbRessort(); i++)
 	{
-		Particule *p = _SystemeMasseRessort->GetParticule(i);
-		Vector sommeForces;
-		for (int j = 0; j < p->GetNbVoisins(); j++)
-		{
-			Ressort *r = p->GetRessortList()[j];
-			Point x(P[r->GetParticuleA()->GetId()]);
-			Point y(P[r->GetParticuleB()->GetId()]);
+		Ressort *r = ressorts[i];
 
-			Vector dir = ((y - x) / length(y - x));
+		int idX = r->GetParticuleA()->GetId();
+		int idY = r->GetParticuleB()->GetId();
 
-			Vector f = (-r->GetRaideur() * 
-						(length(y - x) - r->GetLrepos())) * 
-						dir;
+		Point x(P[idX]);
+		Point y(P[idY]);
 
-			Vector a = -r->GetAmortissement() * dot((V[r->GetParticuleB()->GetId()] - V[r->GetParticuleA()->GetId()]), dir) * dir;
-			sommeForces = sommeForces + f + a;
-			
-			//Force[r->GetParticuleB()->GetId()] = Force[r->GetParticuleB()->GetId()] - f; // appliquer l'opposé à l'autre coté du ressort?
-		}
-		Force[p->GetId()] = Force[p->GetId()] + sommeForces;
+		Vector dir = ((y - x) / length(y - x));
+
+		Vector f = -r->GetRaideur() *
+				   (length(y - x) - r->GetLrepos()) *
+				   dir;
+
+		Vector a = -r->GetAmortissement() *
+				   dot((V[idY] - V[idX]), dir) *
+				   dir;
+
+		Force[idX] = Force[idX] - f - a;
+		Force[idY] = Force[idY] + f + a;
 	}
-	
-	
-	/// f = somme_i (ki * (l(i,j)-l_0(i,j)) * uij ) + (nuij * (vi - vj) * uij) + (m*g) + force_ext
-	
-	/// Rq : Les forces dues a la gravite et au vent sont ajoutees lors du calcul de l acceleration
-    
-		
-}//void
 
+	/// f = somme_i (ki * (l(i,j)-l_0(i,j)) * uij ) + (nuij * (vi - vj) * uij) + (m*g) + force_ext
+
+	/// Rq : Les forces dues a la gravite et au vent sont ajoutees lors du calcul de l acceleration
+
+} // void
 
 /**
  * Gestion des collisions avec le sol.
  */
 void ObjetSimuleMSS::Collision()
 {
-    /// Arret de la vitesse quand touche le plan
-   
-    
-}// void
+	Point origin(0,-10,0);
+	/// Arret de la vitesse quand touche le plan
+	for(int i = 0; i < _SystemeMasseRessort->GetNbParticule(); i++) {
+		//transformer P en coordonnees monde
+		if (P[i].y <= -10) {
+			V[i] = Vector(0, 0, 0);
+		} else if (distance(Point(P[i]), origin) <= 1) {
+			V[i] = Vector(0, 0, 0);
+		}
+	}
 
+} // void

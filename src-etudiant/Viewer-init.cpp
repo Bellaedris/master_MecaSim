@@ -147,7 +147,7 @@ void Viewer::init_sphere()
     const int divAlpha = divBeta/2;
     int i,j;
     float beta, alpha, alpha2;
-    float rayon = 0.05;
+    float rayon = 1;
     
     m_sphere = Mesh(GL_TRIANGLE_STRIP);
     
@@ -164,7 +164,7 @@ void Viewer::init_sphere()
             
             m_sphere.texcoord(beta/(2.0f*M_PI), 0.5f+alpha2/M_PI);
             
-            m_sphere.normal( - Vector(rayon * cos(alpha2)*cos(beta),
+            m_sphere.normal( Vector(rayon * cos(alpha2)*cos(beta),
                                     rayon * sin(alpha2),
                                     rayon * cos(alpha2)*sin(beta)) );
             
@@ -175,7 +175,7 @@ void Viewer::init_sphere()
             
             m_sphere.texcoord(beta/(2.0f*M_PI), 0.5f+alpha/M_PI);
             
-            m_sphere.normal( - Vector(rayon * cos(alpha)*cos(beta),
+            m_sphere.normal( Vector(rayon * cos(alpha)*cos(beta),
                                     rayon * sin(alpha),
                                     rayon * cos(alpha)*sin(beta)) );
             
@@ -219,13 +219,14 @@ int Viewer::init()
     // Chargement des textures utilisees dans la scene
     // Texture pour le cube
    //  m_cube_texture = read_texture(0, "../data/debug2x2red.png");
-    m_cube_texture = read_texture(0, smart_path("data/debug2x2red.png"));
+    m_cube_texture = read_texture(0, smart_path("data/goobbue.jpeg"));
 
     // Texture pour le tissu
     //m_tissu_texture = read_texture(0, "data/papillon.png");
     //m_tissu_texture = read_texture(0, "data/textures/tissu1.png");
    // m_tissu_texture = read_texture(0, "data/textures/tissu2.jpg");
-    m_tissu_texture = read_texture(0, smart_path("data/textures/tissu1.png"));
+   //m_tissu_texture = read_texture(0, smart_path("data/goobbue.jpeg"));
+    m_tissu_texture = read_texture(0, smart_path("data/castex.jpg"));
 
     // Appel des procedures d initialisation des objets de la scene
     // Pour les objets non simules

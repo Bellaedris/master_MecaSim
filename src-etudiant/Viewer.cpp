@@ -125,10 +125,9 @@ int Viewer::render( )
     //gl.draw(m_cube);
     
     // Rajouter ici les appels pour afficher votre objet non simule
-    // Exemple :
-    //gl.texture(m_votreObjet_texture);
-    //gl.model(...);
-    //gl.draw(m_votreObjet);
+    gl.texture(m_cube_texture);
+    gl.model(Scale(.5f, .5f, .5f));
+    gl.draw(m_sphere);
     
     // Gestion de la lumiere
     //gl.lighting(false);

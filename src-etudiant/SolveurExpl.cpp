@@ -57,8 +57,9 @@ void SolveurExpl::CalculAccel_ForceGravite(Vector g,
     for (int i = 0; i < nb_som; i++)
     {
         if (M[i] != 0) {
-            Force[i] = Force[i] + g;
-            A[i] = (1 / M[i]) * Force[i];
+            Force[i] = Force[i] + M[i] * g;
+            A[i] = Force[i] / M[i];
+            Force[i] = Vector(0,0,0);
         }
     }
     
@@ -81,7 +82,7 @@ void SolveurExpl::Solve(float visco,
     for (int i = 0; i < nb_som; i++)
     {
         //Eulerian semi-implicit
-        V[i] = V[i] + _delta_t * A[i];
+        V[i] = visco * (V[i] + _delta_t * A[i]);
         P[i] = P[i] + _delta_t * V[i];
 
         //Eulerian explicit
